@@ -24,7 +24,7 @@ def main():
     pygame.init()
     FPSCLOCK = pygame.time.Clock()
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
-    BASICFONT = pygame.font.FONT('freesansbold.ttf', 18)
+    BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
     pygame.display.set_caption('Blockdodge')
     showStartScreen()
     while True:
@@ -35,7 +35,7 @@ def runGame():
     xcoord = WINDOWWIDTH/2
     blockCoords = (xcoord, 20)
     spike = (randrange(0,WINDOWWIDTH),WINDOWHEIGHT)
-    while TRUE: #main game loop
+    while True: #main game loop
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
@@ -93,3 +93,7 @@ def showStartScreen():
         FPSCLOCK.tick(FPS)
         degrees1 += 3
         degrees2 += 7
+def terminate():
+    pygame.quick()
+    sys.exit()
+main()
