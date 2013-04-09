@@ -15,10 +15,10 @@ textRectObj = textSurfaceObj.get_rect()
 textRectObj.center = (200, 150)
 
 while True: # main game loop
-DISPLAYSURF.fill(WHITE)
-DISPLAYSURF.blit(textSurfaceObj, textRectObj)
-for event in pygame.event.get():
-if event.type == QUIT:
-pygame.quit()
-sys.exit()
-pygame.display.update()
+    DISPLAYSURF.fill(WHITE)
+    DISPLAYSURF.blit(textSurfaceObj, textRectObj)
+    for event in pygame.event.get():
+        if event.type == QUIT:
+            pygame.quit()
+            sys.exit()
+    pygame.display.update()
