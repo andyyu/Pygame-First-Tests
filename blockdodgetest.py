@@ -12,7 +12,7 @@ GREEN = ( 0, 255, 0)
 DARKGREEN = ( 0, 155, 0)
 DARKGRAY = ( 40, 40, 40)
 blockImg = pygame.image.load('box.png')
-
+spikeImg = pygame.image.load('spike.png')
 
 UP = 'up'
 DOWN = 'down'
@@ -26,27 +26,60 @@ def main():
     DISPLAYSURF = pygame.display.set_mode((WINDOWWIDTH, WINDOWHEIGHT))
     BASICFONT = pygame.font.Font('freesansbold.ttf', 18)
     pygame.display.set_caption('Blockdodge')
-    showStartScreen()
+    pygame.key.set_repeat(1, 10)
+    
+    #showStartScreen()
     while True:
         runGame()
-        showGameOverScreen()
+        #showGameOverScreen()
 
 def runGame():
+    DISPLAYSURF.fill(WHITE)
     xcoord = WINDOWWIDTH/2
-    blockCoords = (xcoord, 20)
-    spike = (randrange(0,WINDOWWIDTH),WINDOWHEIGHT)
+    spike1Coords = [randrange(0, WINDOWWIDTH), 0]
+    spike2Coords = [randrange(0, WINDOWWIDTH), 0]
     while True: #main game loop
+        DISPLAYSURF.fill(WHITE)
+        #spike handling
+        if spike1Coords[1] > WINDOWHEIGHT:
+            spike1Coords = [randrange(0, WINDOWWIDTH), 0]
+        else:
+            spike1Coords[1]+=2
+        if spike2Coords[1] > WINDOWHEIGHT:
+            spike2Coords = [randrange(0, WINDOWWIDTH), 0]
+        else:
+            spike2Coords[1]+=3
+        pygame.draw.polygon(DISPLAYSURF, BLACK, [spike1Coords, (spike1Coords[0]-10, spike1Coords[1]-20), (spike1Coords[0]+10, spike1Coords[1]-20)])
+        pygame.draw.polygon(DISPLAYSURF, BLACK, [spike2Coords, (spike2Coords[0]-10, spike2Coords[1]-20), (spike2Coords[0]+10, spike2Coords[1]-20)])
+        #block handling
         for event in pygame.event.get():
             if event.type == QUIT:
                 terminate()
             elif event.type == KEYDOWN:
                 if (event.key == K_LEFT and xcoord-10>0):
-                    xcoord-=10
-                elif (event.key == K_RIGHT and xcoord+10<WINDOWWIDTH):
-                    xcoord+=10
+                    xcoord-=4
+                elif(event.key == K_RIGHT and xcoord+10<WINDOWWIDTH):
+                    xcoord+=4
                 elif event.key == K_ESCAPE:
+                    pygame.sys.quit()
                     terminate()
+        #hit detection
+        if spike1Coords[1]-5>=WINDOWHEIGHT-20:
+            if (spike1Coords[0]-10 <= xcoord-10 <= spike1Coords[0]+10) or (spike1Coords[0]-10 <= xcoord+10 <= spike1Coords[0]+10):
+                terminate()
+        if spike2Coords[1]-5>=WINDOWHEIGHT-20:
+            if (spike2Coords[0]-10 <= xcoord-10 <= spike2Coords[0]+10) or (spike2Coords[0]-10 <= xcoord+10 <= spike2Coords[0]+10):
+                terminate()
+        pygame.draw.rect(DISPLAYSURF, GREEN, (xcoord,WINDOWHEIGHT-20, 20,20))
+        pygame.display.update()
+        FPSCLOCK.tick(FPS)
 
+
+def redraw(things):
+    DISPLAYSURF.fill(WHITE)
+    for thing in things:
+        DISPLAYSURF.blit(thing[0], thing[1])
+        
 def drawPressKeyMsg():
     pressKeySurf = BASICFONT.render('Press a key to play.', True, 
 DARKGRAY)
@@ -94,6 +127,6 @@ def showStartScreen():
         degrees1 += 3
         degrees2 += 7
 def terminate():
-    pygame.quick()
+    pygame.quit()
     sys.exit()
 main()
